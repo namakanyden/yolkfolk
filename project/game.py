@@ -1,6 +1,7 @@
 # from zeromap import ZeroMap
 import pytmx
 from time import sleep
+from actors import BlueDiamond, Sword
 
 
 HEIGHT = 600
@@ -13,6 +14,7 @@ class Context:
         self.score = 0
         self.room = "the entrance"
         self.map = None
+        self.actors = []
 
 
 class View:
@@ -23,20 +25,50 @@ class View:
         self.height = height
 
 
-view = View(70, 42, 23, 13)
+class Dialog(object):
+    def __init__(self, text, width, color="white"):
+        self._width = width
+        self._color = color
+
+        self._lines = []
+        line = ""
+        for word in text.split():
+            if len(line) + len(word) < self._width:
+                line = f"{line} {word}"
+            else:
+                self._lines.append(line.center(self._width))
+                line = word
+
+    def draw(self):
+        # count the position first
+        y_offset = HEIGHT / 2 - 16 * len(self._lines) / 2
+        x_offset = WIDTH / 2 - 16 * self._width / 2
+
+        # print line by line
+        counter = 0
+        for line in self._lines:
+            screen.draw.text(
+                line,
+                (x_offset, counter * 20 + y_offset),
+                fontname="dizzy-iii-fantasy-world-dizzy-spectrum.ttf",
+                fontsize=16,
+                color=self._color
+            )
+            counter += 1
+
+
+#view = View(310, 30, 46, 22)
+view = View(0, 0, 46, 22)
 context = Context()
 
 
 def draw():
-    # print('>> draw')
     global view
     screen.blit("screen", (0, 0))
     # print(viewport[1])
     # row = 10
 
-    # for row in range(view, viewport[1] + HEIGHT//tmx.tileheight):
-    #    for col in range(viewport[0], viewport[0] + WIDTH//tmx.tilewidth):
-
+    # draw background
     y = 0
     for row in range(view.y, view.y + view.height):
         x = 0
@@ -51,20 +83,20 @@ def draw():
 
     # print score
     screen.draw.text(
-        f'{context.score:02}',
+        f"{context.score:02}",
         (320, 30),
         fontname="dizzy-iii-fantasy-world-dizzy-spectrum.ttf",
         fontsize=16,
-        color='yellow'
+        color="yellow",
     )
 
     # print lifes
     screen.draw.text(
-        '\u25cf'*context.lifes,
+        "\u25cf" * context.lifes,
         (411, 30),
         fontname="dizzy-iii-fantasy-world-dizzy-spectrum.ttf",
         fontsize=16,
-        color='yellow'
+        color="yellow",
     )
 
     # print name of the room
@@ -75,17 +107,32 @@ def draw():
         fontsize=16,
     )
 
+    # draw actors
+    for actor in context.actors:
+        actor.draw()
+        #print(actor)
+
+    Dialog("jano je proste namakany makac jeden velky", 15, 'white').draw()
+    #d.draw()
+
 
 def update():
-    # print('>> update')
     global view
     # view.x += 1
 
 
 def main():
-    # print('>> main')
-    global tmx
     context.map = pytmx.load_pygame("maps/magicland.tmx")
+
+    for actor in context.map.get_layer_by_name('actors'):
+        pos = (actor.x/16, actor.y/16)
+
+        if actor.name == 'BlueDiamond':
+            context.actors.append(BlueDiamond(pos))
+        elif actor.name == 'Sword':
+            context.actors.append(Sword(pos))
+
+        #print(actor)
 
 
 main()
