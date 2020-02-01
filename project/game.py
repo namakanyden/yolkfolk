@@ -1,7 +1,7 @@
 # from zeromap import ZeroMap
 import pytmx
 from time import sleep
-from actors import BlueDiamond, Sword
+from items import BlueDiamond, Sword
 
 
 HEIGHT = 600
@@ -57,8 +57,8 @@ class Dialog(object):
             counter += 1
 
 
-#view = View(310, 30, 46, 22)
-view = View(0, 0, 46, 22)
+view = View(310, 30, 46, 22)
+#view = View(0, 0, 46, 22)
 context = Context()
 
 
