@@ -1,4 +1,5 @@
-from pgzero.actor import Actor
+from pgzero.builtins import Actor
+
 
 class Item(Actor):
     def __init__(self, *args, name, **kwargs):
@@ -23,3 +24,7 @@ class Item(Actor):
 
     def __str__(self):
         return self._name
+
+    # TODO mozno treba iny typ na update()
+    def update(self):
+        pass
