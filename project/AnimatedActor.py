@@ -11,22 +11,9 @@ class AnimatedActor(Actor):
         self.pingpong = pingpong
         self.duration = duration
         self._stopped = False
-
-        # TODO make it required
-        self.height = kwargs['sprite'][1]
-        self.width = kwargs['sprite'][0]
-
-        # prepare frames
         self._frames = []
-        for x_offset in range(int(self._orig_surf.get_width() / self.width)):
-            surface = self._orig_surf.subsurface((x_offset * self.width, 0, self.width, self.height))
-            self._frames.append(surface)
-
-        # frame config
-        self._current_frame = 0
-        self.frame_duration = self.duration / len(self._frames)
-        self.last_frame_update = time() * 1000
-        self._next_frame_dx = 1
+        # TODO make it required: sprite
+        self.set_image(self.image, dimension=kwargs['sprite'])
 
     def start(self):
         self._stopped = False
@@ -34,18 +21,45 @@ class AnimatedActor(Actor):
     def stop(self):
         self._stopped = True
 
+    def set_image(self, image, dimension):
+        px, py = self.pos
+        tx, ty = self.topleft
+        self.image = image
+        self.height = dimension[1]
+        self.width = dimension[0]
+        self._frames = []
+
+        # self._init_position(pos=None, anchor=self.anchor, sprite=dimension)
+
+        # counting that sprites will be same size
+        self.pos = (px, py)
+        self.topleft = (tx, ty)
+
+        for x_offset in range(int(self._orig_surf.get_width() / self.width)):
+            surface = self._orig_surf.subsurface(
+                (x_offset * self.width, 0, self.width, self.height))
+            self._frames.append(surface)
+
+        # frame config
+        self._current_frame = 0
+        self.frame_duration = self.duration / len(self._frames)
+        self.last_frame_update = time() * 1000
+        self._next_frame_dx = 1
+        # return self._current_frame
+
     @property
     def current_frame(self):
         return self._current_frame
 
     @current_frame.setter
     def current_frame(self, index):
-        if 0 < index < len(self._frames) -1:
+        if 0 < index < len(self._frames) - 1:
             raise 'Frame index out of range.'
         self._current_frame = index
 
     def _update_frame(self):
-        if not self._stopped:
+        # if not self._stopped:
+        if True:
             now = time() * 1000
             if now - self.last_frame_update > self.frame_duration:
                 self.last_frame_update = now
@@ -58,33 +72,9 @@ class AnimatedActor(Actor):
                     if self._current_frame == len(self._frames):
                         self._current_frame = 0
 
+
     def draw(self):
         self._update_frame()
         print(self._current_frame)
         game.screen.blit(self._frames[self._current_frame], self.topleft)
 
-
-
-def draw():
-    screen.clear()
-    braid.draw()
-
-def update(dt):
-    
-    # if braid.x > WIDTH:
-    #     braid.x = 0
-    if keyboard.space:
-        if braid._stopped:
-            braid.start()
-        else:
-            braid.stop()
-            braid.current_frame = 0
-    
-    if not braid._stopped:
-        braid.x += 1
-
-
-braid = AnimatedActor('braid_run', sprite=(130, 150), duration=200, pingpong=True)
-# braid.pos = (50, 50)
-# b = B()
-# b.mega()
