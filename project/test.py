@@ -105,20 +105,9 @@ def draw():
 
     screen.clear()
 
-    wallpaper = pygame.image.load("maps/dizzy.3.5.background.32x32.png").convert()
-    screen.blit(wallpaper, (-view.left * 32, -view.top * 32))
+    # wallpaper = pygame.image.load("maps/dizzy.3.5.background.32x32.png").convert()
+    # screen.blit(wallpaper, (-view.left * 32, -view.top * 32))
 
-    # wallpaper: pytmx.TiledImageLayer = context.map.get_layer_by_name("wallpaper")
-    # print(wallpaper.)
-
-    # screen.blit(, (0, 32))
-
-    # screen.blit("dizzy_hud", (0, 0))
-
-    # image = images.yolkfolk.convert()
-
-    # screen.blit("yolkfolk", (0, 0))
-    # screen.blit(image, (0,0))
 
     view_offset_x = 0
     view_offset_y = 0
@@ -181,41 +170,29 @@ def draw():
 
 
 def update():
-    if keyboard.left:
-        view.move_view(ViewMovement.LEFT)
-
-    if keyboard.right:
-        view.move_view(ViewMovement.RIGHT)
-
-    if keyboard.up:
-        view.move_view(ViewMovement.UP)
-
-    if keyboard.down:
-        view.move_view(ViewMovement.DOWN)
+    # if keyboard.left:
+    #     view.move_view(ViewMovement.LEFT)
+    #
+    # if keyboard.right:
+    #     view.move_view(ViewMovement.RIGHT)
+    #
+    # if keyboard.up:
+    #     view.move_view(ViewMovement.UP)
+    #
+    # if keyboard.down:
+    #     view.move_view(ViewMovement.DOWN)
 
 
 def main():
-    context.map = pytmx.load_pygame("maps/dizzy.3.5.tmx")
+    context.map = pytmx.load_pygame("maps/dizzy-main-map.tmx")
 
     for actor in context.map.get_layer_by_name("actors"):
         pos = (actor.x, actor.y)
 
-        if actor.name == "torch":
+        if actor.name == "dizzy":
+            # TODO pridat dizziho
             pass
-            # context.actors.append(BlueDiamond(pos))
-        elif actor.name == "long rope":
-            # context.actors.append(Sword(pos))
-            pass
-        elif actor.name == 'starting handle':
-            pass
-        elif actor.name == 'short rope':
-            pass
-        elif actor.name == 'teleoprt':
-            pass
-        elif actor.name == 'machine':
-            pass
-        elif actor.name == 'dylan':
-            pass
+
 
         print(actor)
 
