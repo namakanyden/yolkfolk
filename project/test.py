@@ -170,6 +170,7 @@ def draw():
 
 
 def update():
+    pass
     # if keyboard.left:
     #     view.move_view(ViewMovement.LEFT)
     #

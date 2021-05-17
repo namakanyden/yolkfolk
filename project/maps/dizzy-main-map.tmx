@@ -11,7 +11,7 @@
  <objectgroup id="3" name="actors">
   <object id="1" name="door" x="0" y="544" width="64" height="128"/>
   <object id="2" name="flare" x="128" y="448" width="64" height="160"/>
-  <object id="3" name="jar" x="384" y="512" width="96" height="64"/>
+  <object id="3" name="jug" x="384" y="512" width="96" height="64"/>
   <object id="4" name="leaves" x="640.177" y="640.342" width="96" height="32"/>
   <object id="5" name="matches" x="768.166" y="511.83" width="96" height="64"/>
   <object id="6" name="dizzy" x="242.052" y="581.857" width="57.7202" height="96.8209"/>
