@@ -5,6 +5,7 @@ import pygame
 import pytmx
 from time import sleep
 # from .items import StartingHandle
+from pgzero.actor import Actor
 from settings import WIDTH, HEIGHT, TITLE, ICON
 
 
@@ -17,12 +18,7 @@ class Context:
         self.actors = []
 
 
-class World:
-    def __init__(self):
-        self.actors = []
-
-
-class ViewMovement:
+class Movement:
     LEFT = 1
     RIGHT = 2
     UP = 3
@@ -50,13 +46,13 @@ class View:
         )
 
     def move_view(self, view_movement: int):
-        if view_movement == ViewMovement.RIGHT:
+        if view_movement == Movement.RIGHT:
             if self.left + self.width < self.context.map.width:
                 self.left += 1
-        elif view_movement == ViewMovement.LEFT:
+        elif view_movement == Movement.LEFT:
             if self.left > 0:
                 self.left -= 1
-        elif view_movement == ViewMovement.UP:
+        elif view_movement == Movement.UP:
             if self.top > 0:
                 self.top -= 1
         else:
@@ -96,8 +92,46 @@ class Dialog(object):
             counter += 1
 
 
+
+def can_actor_move(movement: Movement, actor: Actor):
+    walls = context.map.get_layer_by_name("walls")
+
+    if movement == Movement.RIGHT:
+        point_of_intersect_x = (actor.left + actor.width) /32
+        point_of_intersect_y = (actor.top + actor.height)//32
+        for wall in walls.tiles():
+            x,y,data = wall
+            if x+1 > point_of_intersect_x >= x and point_of_intersect_y == y :
+                return False
+
+    elif movement == Movement.LEFT:
+        point_of_intersect_x = actor.left / 32
+        point_of_intersect_y = (actor.top + actor.height) // 32
+        for wall in walls.tiles():
+            x, y, data = wall
+            if x < point_of_intersect_x <= x+1 and point_of_intersect_y == y:
+                return False
+    elif movement == Movement.UP:
+        point_of_intersect_x = actor.x // 32
+        point_of_intersect_y = actor.top / 32
+        for wall in walls.tiles():
+            x, y, data = wall
+            if point_of_intersect_x == x and y+1>point_of_intersect_y >= y:
+                return False
+    elif movement == Movement.DOWN:
+        point_of_intersect_x = actor.x // 32
+        point_of_intersect_y = (actor.top + actor.height )/ 32
+        for wall in walls.tiles():
+            x, y, data = wall
+            if point_of_intersect_x == x and y <= point_of_intersect_y < y+1:
+                return False
+
+    return True
+
+
 context = Context()
 view = View(context, 0, 0, 32, 24)
+
 
 
 def draw():
@@ -167,21 +201,31 @@ def draw():
 
     # Dialog("jano je proste namakany makac jeden velky", 15, "white").draw()
     # d.draw()
+    context.actors[0].draw()
 
 
 def update():
-    pass
-    # if keyboard.left:
-    #     view.move_view(ViewMovement.LEFT)
-    #
-    # if keyboard.right:
-    #     view.move_view(ViewMovement.RIGHT)
-    #
-    # if keyboard.up:
-    #     view.move_view(ViewMovement.UP)
-    #
-    # if keyboard.down:
-    #     view.move_view(ViewMovement.DOWN)
+    actor = context.actors[0]
+
+    if keyboard.left:
+        # view.move_view(ViewMovement.LEFT)
+        if(can_actor_move(Movement.LEFT, actor)):
+            actor.x -= 3
+
+    if keyboard.right:
+        # view.move_view(ViewMovement.RIGHT)
+        if(can_actor_move(Movement.RIGHT, actor)):
+            actor.x += 3
+
+    if keyboard.up:
+        # view.move_view(ViewMovement.UP)
+        if (can_actor_move(Movement.UP, actor)):
+            actor.y -= 3
+
+    if keyboard.down:
+        # view.move_view(ViewMovement.DOWN)
+        if (can_actor_move(Movement.DOWN, actor)):
+            actor.y += 3
 
 
 def main():
@@ -191,12 +235,11 @@ def main():
         pos = (actor.x, actor.y)
 
         if actor.name == "dizzy":
-            # TODO pridat dizziho
-            pass
-
-
-        print(actor)
-
+            temp_actor = Actor("matches")
+            print(pos)
+            temp_actor.pos = pos
+            context.actors.append(temp_actor)
+        print(context.actors)
 
 # main()
 
