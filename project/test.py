@@ -98,7 +98,8 @@ def can_actor_move(movement: Movement, actor: Actor):
 
     if movement == Movement.RIGHT:
         point_of_intersect_x = (actor.left + actor.width) /32
-        point_of_intersect_y = (actor.top + actor.height)//32
+        # point_of_intersect_y = (actor.top + actor.height)//32
+        point_of_intersect_y = (actor.y) // 32
         for wall in walls.tiles():
             x,y,data = wall
             if x+1 > point_of_intersect_x >= x and point_of_intersect_y == y :
@@ -106,7 +107,8 @@ def can_actor_move(movement: Movement, actor: Actor):
 
     elif movement == Movement.LEFT:
         point_of_intersect_x = actor.left / 32
-        point_of_intersect_y = (actor.top + actor.height) // 32
+        # point_of_intersect_y = (actor.top + actor.height) // 32
+        point_of_intersect_y = (actor.y) // 32
         for wall in walls.tiles():
             x, y, data = wall
             if x < point_of_intersect_x <= x+1 and point_of_intersect_y == y:
