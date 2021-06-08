@@ -92,43 +92,17 @@ class Dialog(object):
             counter += 1
 
 
-
-def can_actor_move(movement: Movement, actor: Actor):
+def can_actor_move(pos_x, pos_y):
     walls = context.map.get_layer_by_name("walls")
-
-    if movement == Movement.RIGHT:
-        point_of_intersect_x = (actor.left + actor.width) /32
-        # point_of_intersect_y = (actor.top + actor.height)//32
-        point_of_intersect_y = (actor.y) // 32
-        for wall in walls.tiles():
-            x,y,data = wall
-            if x+1 > point_of_intersect_x >= x and point_of_intersect_y == y :
-                return False
-
-    elif movement == Movement.LEFT:
-        point_of_intersect_x = actor.left / 32
-        # point_of_intersect_y = (actor.top + actor.height) // 32
-        point_of_intersect_y = (actor.y) // 32
-        for wall in walls.tiles():
-            x, y, data = wall
-            if x < point_of_intersect_x <= x+1 and point_of_intersect_y == y:
-                return False
-    elif movement == Movement.UP:
-        point_of_intersect_x = actor.x // 32
-        point_of_intersect_y = actor.top / 32
-        for wall in walls.tiles():
-            x, y, data = wall
-            if point_of_intersect_x == x and y+1>point_of_intersect_y >= y:
-                return False
-    elif movement == Movement.DOWN:
-        point_of_intersect_x = actor.x // 32
-        point_of_intersect_y = (actor.top + actor.height )/ 32
-        for wall in walls.tiles():
-            x, y, data = wall
-            if point_of_intersect_x == x and y <= point_of_intersect_y < y+1:
-                return False
+    pos_x = pos_x // 32
+    pos_y = pos_y // 32
+    for wall in walls.tiles():
+        x, y, data = wall
+        if pos_x == x and pos_y == y:
+            return False
 
     return True
+
 
 
 context = Context()
@@ -211,22 +185,26 @@ def update():
 
     if keyboard.left:
         # view.move_view(ViewMovement.LEFT)
-        if(can_actor_move(Movement.LEFT, actor)):
+        new_pos = actor.x - 3
+        if can_actor_move(new_pos, actor.y):
             actor.x -= 3
 
     if keyboard.right:
         # view.move_view(ViewMovement.RIGHT)
-        if(can_actor_move(Movement.RIGHT, actor)):
+        new_pos = actor.x + 3
+        if can_actor_move(new_pos, actor.y):
             actor.x += 3
 
     if keyboard.up:
         # view.move_view(ViewMovement.UP)
-        if (can_actor_move(Movement.UP, actor)):
+        new_pos = actor.y - 3
+        if can_actor_move(actor.x, new_pos):
             actor.y -= 3
 
     if keyboard.down:
         # view.move_view(ViewMovement.DOWN)
-        if (can_actor_move(Movement.DOWN, actor)):
+        new_pos = actor.y + 3
+        if can_actor_move(actor.x, new_pos):
             actor.y += 3
 
 
