@@ -5,3 +5,5 @@ class Context:
         self.room = "the entrance"
         self.map = None
         self.actors = []
+        self.view_offset_x = 32
+        self.view_offset_y = 0

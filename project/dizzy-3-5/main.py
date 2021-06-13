@@ -31,9 +31,6 @@ def draw():
 
 
 
-    view_offset_x = 32
-    view_offset_y = 0
-
     # draw background
     y = 0
     for row in range(view.top, view.top + view.height):
@@ -43,8 +40,8 @@ def draw():
             if image is not None:
                 screen.blit(image,
                             (
-                                view_offset_x + x * context.map.tilewidth,
-                                view_offset_y + y * context.map.tileheight,
+                                context.view_offset_x + x * context.map.tilewidth,
+                                context.view_offset_y + y * context.map.tileheight,
                             ),
                             )
             x += 1
@@ -75,9 +72,8 @@ def draw():
     #     fontname="dizzy-iii-fantasy-world-dizzy-spectrum.ttf",
     #     fontsize=27,
     # )
-
-    # TODO LOOP PRE AKTOROV PRIDAT
-    context.actors[0].draw()
+    for actor in context.actors:
+        actor.draw()
 
 
 
@@ -113,14 +109,20 @@ def main():
     context.map = pytmx.load_pygame("../maps/dizzy-main-map.tmx")
 
     for actor in context.map.get_layer_by_name("actors"):
-        pos = (actor.x, actor.y)
+        temp_actor = None
 
         if actor.name == "jug":
-            temp_actor = Actor("jug")
-            temp_actor._surf = pygame.transform.scale(temp_actor._surf, (64, 64))
-            temp_actor.pos = pos
+            temp_actor = Actor("32x/jug")
+        if actor.name == "leaves":
+            temp_actor = Actor("32x/leaves")
+
+        if actor.name == "door":
+            temp_actor = Actor("32x/door")
+
+        if temp_actor:
+            temp_actor.left, temp_actor.top = context.view_offset_x + actor.x, context.view_offset_y + actor.y
             context.actors.append(temp_actor)
-        print(context.actors)
+            print(context.actors)
 
 # main()
 
